@@ -4,7 +4,7 @@ package com.base.framework.core.exceptions;
  * @Description   : 业务异常
  * @Project       : framework-core
  * @Program Name  : com.yirun.framework.core.exception.BusinessException.java
- * @Author        : imzhousong@gmail.com 周松
+ * @Author        : zc.ding@foxmail.com
  */
 public class BusinessException extends BaseException {
 

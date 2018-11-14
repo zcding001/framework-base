@@ -4,7 +4,7 @@ package com.base.framework.core.exceptions;
  * @Description   : 没有匹配的配置条目异常
  * @Project       : framework-core
  * @Program Name  : com.yirun.framework.core.exception.NoSuchConfigItemException.java
- * @Author        : imzhousong@gmail.com 周松
+ * @Author        : zc.ding@foxmail.com
  */
 public class NoSuchConfigItemException extends GeneralException {
 

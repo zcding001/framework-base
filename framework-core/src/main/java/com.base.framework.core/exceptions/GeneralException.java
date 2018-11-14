@@ -4,7 +4,7 @@ package com.base.framework.core.exceptions;
  * @Description   : 普通异常
  * @Project       : framework-core
  * @Program Name  : com.yirun.framework.core.exception.GeneralException.java
- * @Author        : imzhousong@gmail.com 周松
+ * @Author        : zc.ding@foxmail.com
  */
 public class GeneralException extends BaseException {
 

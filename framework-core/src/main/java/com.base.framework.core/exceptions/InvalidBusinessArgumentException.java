@@ -4,7 +4,7 @@ package com.base.framework.core.exceptions;
  * @Description   : 无效的业务参数异常
  * @Project       : framework-core
  * @Program Name  : com.yirun.framework.core.exception.InvalidBusinessArgumentException.java
- * @Author        : imzhousong@gmail.com 周松
+ * @Author        : zc.ding@foxmail.com
  */
 public class InvalidBusinessArgumentException extends BusinessException {
 

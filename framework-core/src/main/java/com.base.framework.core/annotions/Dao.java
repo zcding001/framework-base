@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @Description   : DAO bean注入
  * @Project       : framework-core
  * @Program Name  : com.yirun.framework.core.annotation.Dao.java
- * @Author        : imzhousong@gmail.com 周松
+ * @Author        : zc.ding@foxmail.com
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

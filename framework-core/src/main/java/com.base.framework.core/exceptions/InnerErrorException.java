@@ -4,7 +4,7 @@ package com.base.framework.core.exceptions;
  * @Description   : 内部错误
  * @Project       : framework-core
  * @Program Name  : com.yirun.framework.core.exception.InnerErrorException.java
- * @Author        : imzhousong@gmail.com 周松
+ * @Author        : zc.ding@foxmail.com
  */
 public class InnerErrorException extends BaseException {
 

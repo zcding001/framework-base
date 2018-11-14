@@ -4,7 +4,7 @@ package com.base.framework.core.exceptions;
  * @Description   : 安全异常
  * @Project       : framework-core
  * @Program Name  : com.yirun.framework.core.exception.SecurityExpception.java
- * @Author        : imzhousong@gmail.com 周松
+ * @Author        : zc.ding@foxmail.com
  */
 public class SecurityExpception extends BaseException {
 

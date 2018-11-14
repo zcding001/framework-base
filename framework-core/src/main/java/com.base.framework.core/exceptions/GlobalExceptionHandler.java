@@ -19,7 +19,7 @@ import java.io.StringWriter;
  * @Project : framework-core
  * @Program Name :
  *          com.yirun.framework.core.exception.GlobalExceptionHandler.java
- * @Author : imzhousong@gmail.com 周松
+ * @Author : zc.ding@foxmail.com
  */
 public class GlobalExceptionHandler extends SimpleMappingExceptionResolver {
 

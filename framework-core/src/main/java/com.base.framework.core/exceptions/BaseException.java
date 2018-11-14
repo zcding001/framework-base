@@ -4,7 +4,7 @@ package com.base.framework.core.exceptions;
  * @Description   : 基类异常，只能通过继承使用
  * @Project       : framework-core
  * @Program Name  : com.yirun.framework.core.exception.BaseException.java
- * @Author        : imzhousong@gmail.com 周松
+ * @Author        : zc.ding@foxmail.com
  */
 public abstract class BaseException extends RuntimeException {
 

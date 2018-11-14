@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
  * @Description   : Spring工具类ClassUtils扩展 
  * @Project       : framework-core
  * @Program Name  : com.yirun.framework.core.utils.ClassUtilsExtend.java
- * @Author        : imzhousong@gmail.com 周松
+ * @Author        : zc.ding@foxmail.com
  */
 public abstract class ClassUtilsExtend extends ClassUtils {
 

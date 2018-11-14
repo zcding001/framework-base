@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * @Description   : JTA事务处理
  * @Project       : framework-core
  * @Program Name  : com.yirun.framework.core.annotation.JTATransaction.java
- * @Author        : imzhousong@gmail.com 周松
+ * @Author        : zc.ding@foxmail.com
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
