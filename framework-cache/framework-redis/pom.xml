@@ -3,25 +3,25 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>framework-base</artifactId>
+        <artifactId>framework-cache</artifactId>
         <groupId>com.base.framework</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>framework-jms</artifactId>
-    <packaging>pom</packaging>
-    <name>framework-jms</name>
-    <description>基础框架-消息中间件</description>
     
-    <modules>
-        <module>framework-activemq</module>
-        <module>framework-kafka</module>
-    </modules>
+    <artifactId>framework-redis</artifactId>
+    <name>framework-redis</name>
+    <description>缓存中间件-redis</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
-    
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+    </dependencies>
 </project>

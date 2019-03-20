@@ -1,18 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+    
     <parent>
         <groupId>com.base.framework</groupId>
         <artifactId>framework-base</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>framework-core</artifactId>
-    <name>framework-core</name>
-    <description>基础框架-核心</description>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>framework-cache</artifactId>
+    <packaging>pom</packaging>
+    <name>framework-cache</name>
+    <description>基础框架-缓存</description>
+    
+    <modules>
+        <module>framework-redis</module>
+        <module>framework-memcached</module>
+    </modules>
     
 </project>

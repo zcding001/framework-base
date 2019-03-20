@@ -9,19 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>framework-jms</artifactId>
+    <artifactId>framework-oss</artifactId>
     <packaging>pom</packaging>
-    <name>framework-jms</name>
-    <description>基础框架-消息中间件</description>
+    <name>framework-oss</name>
+    <description>基础框架-对象存储</description>
     
     <modules>
-        <module>framework-activemq</module>
-        <module>framework-kafka</module>
+        <module>framework-aliyun</module>
+        <module>framework-qiniuyun</module>
     </modules>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
-    
 </project>
