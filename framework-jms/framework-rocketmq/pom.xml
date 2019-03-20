@@ -3,26 +3,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>framework-base</artifactId>
+        <artifactId>framework-jms</artifactId>
         <groupId>com.base.framework</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>framework-jms</artifactId>
-    <packaging>pom</packaging>
-    <name>framework-jms</name>
-    <description>基础框架-消息中间件</description>
-    
-    <modules>
-        <module>framework-activemq</module>
-        <module>framework-kafka</module>
-        <module>framework-rocketmq</module>
-    </modules>
+    <artifactId>framework-rocketmq</artifactId>
+    <name>framework-rocketmq</name>
+    <description>消息中间件-rocketmq</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+    </dependencies>
+
 </project>
