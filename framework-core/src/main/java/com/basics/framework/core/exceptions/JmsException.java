@@ -1,11 +1,10 @@
 package com.basics.framework.core.exceptions;
 
 /**
- * @Description   : JMS异常
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.exception.JmsException.java
- * @Author        : zc.ding@foxmail.com
- */
+*  JMS异常
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class JmsException extends BaseException {
 
 	private static final long serialVersionUID = 6166805485791565894L;

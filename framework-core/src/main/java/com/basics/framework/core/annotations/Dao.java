@@ -8,11 +8,10 @@ import java.lang.annotation.Target;
 import org.springframework.stereotype.Component;
 
 /**
- * @Description   : DAO bean注入
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.annotations.Dao.java
- * @Author        : zc.ding@foxmail.com
- */
+*  DAO bean注入
+*  @since                   ：2018/8/10
+*  @author                  ：zc.ding@foxmail.com
+*/
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

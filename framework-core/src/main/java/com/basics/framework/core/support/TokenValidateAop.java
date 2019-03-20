@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
  * 如果没有以submitToken为key从redis中加载，然后进行对比，结果存储到request中
  *
  * @author zc.ding
- * @version 1.1
  * @since 2017年5月21日
  */
 @Component
@@ -54,7 +53,6 @@ public class TokenValidateAop {
 
     /**
      * 验证Token
-     *
      * @param token
      * @param tokenValue 
      * @author zc.ding

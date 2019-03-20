@@ -4,21 +4,19 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * @Description   : MD5工具类
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.utils.crypto.MD5.java
- * @Author        : zc.ding@foxmail.com
- */
+*  MD5工具类
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public abstract class MD5 {
 	
 	private final static String DM5 = "MD5";
 	
 	/**
-	 *  @Description    : MD5加密
-	 *  @Method_Name    : encrypt
+	 *  MD5加密
 	 *  @param data		待加密数据(未加密)
 	 *  @return         : String
-	 *  @Author         : zc.ding@foxmail.com
+	 *  @author         : zc.ding@foxmail.com
 	 */
 	public static String encrypt(String data) {
 		try {
@@ -32,11 +30,10 @@ public abstract class MD5 {
 	}
     
     /**
-     *  @Description    : MD5加密
-     *  @Method_Name    : encrypt
+     *  MD5加密
      *  @param data		待加密数据(未加密)
      *  @return         : String
-     *  @Author         : zc.ding@foxmail.com
+     *  @author         : zc.ding@foxmail.com
      */
 	public static String encrypt(byte[] data) {
 		try {

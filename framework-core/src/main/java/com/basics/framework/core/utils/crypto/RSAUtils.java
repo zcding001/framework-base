@@ -12,7 +12,7 @@ import java.util.Base64;
 
 /**
 *  非对称加密，解密工具类
-*  @date                    ：2018/8/10
+*  @since                   ：2018/8/10
 *  @author                  ：zc.ding@foxmail.com
 */
 public class RSAUtils {
@@ -34,11 +34,11 @@ public class RSAUtils {
 	private static final int KEY_SIZE = 1024;
 	 
 	/**
-	 * @description  产生密钥对
+	 * 产生密钥对
 	 * @return
 	 * String [0] = RSAPublicKey 公钥
 	 * String [1] = RSAPrivateKey 私钥
-	 * @throws NoSuchAlgorithmException 
+	 * @throws NoSuchAlgorithmException 无算法
 	 */
 	public static String [] genSecretKeyPair() throws Exception {
 		KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);

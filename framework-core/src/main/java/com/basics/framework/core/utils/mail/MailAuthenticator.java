@@ -6,7 +6,7 @@ import javax.mail.PasswordAuthentication;
 
 /**
 *  TODO
-*  @date                    ：2018/8/10
+*  @since                   ：2018/8/10
 *  @author                  ：zc.ding@foxmail.com
 */
 public class MailAuthenticator extends Authenticator {

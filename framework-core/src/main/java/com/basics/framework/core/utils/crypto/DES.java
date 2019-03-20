@@ -11,11 +11,10 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
- * @Description   : Des工具类
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.utils.crypto.DES.java
- * @Author        : zc.ding@foxmail.com
- */
+*  Des工具类
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public abstract class DES {
 
 	private final static String DES = "DES";

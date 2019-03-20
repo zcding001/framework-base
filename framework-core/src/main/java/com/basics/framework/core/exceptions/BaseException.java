@@ -1,11 +1,10 @@
 package com.basics.framework.core.exceptions;
 
 /**
- * @Description   : 基类异常，只能通过继承使用
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.exception.BaseException.java
- * @Author        : zc.ding@foxmail.com
- */
+*  基类异常，只能通过继承使用
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public abstract class BaseException extends RuntimeException {
 
 	private static final long serialVersionUID = 3081005071365603850L;

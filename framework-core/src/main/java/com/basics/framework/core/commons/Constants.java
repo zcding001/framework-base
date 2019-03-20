@@ -2,7 +2,7 @@ package com.basics.framework.core.commons;
 
 /**
 *  常量
-*  @date                    ：2018/8/10
+*  @since                   ：2018/8/10
 *  @author                  ：zc.ding@foxmail.com
 */
 public final class Constants {

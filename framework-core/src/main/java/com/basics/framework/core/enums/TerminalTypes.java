@@ -2,7 +2,7 @@ package com.basics.framework.core.enums;
 
 /**
 *  终端类型
-*  @date                    ：2018/8/10
+*  @since                   ：2018/8/10
 *  @author                  ：zc.ding@foxmail.com
 */
 public enum TerminalTypes {
@@ -46,7 +46,7 @@ public enum TerminalTypes {
     *  通过终端名称获取类型值
     *  @param name  终端名称
     *  @return int
-    *  @date                    ：2018/11/13
+    *  @since                   ：2018/11/13
     *  @author                  ：zc.ding@foxmail.com
     */
 	public static int getValue(String name) {
@@ -62,7 +62,7 @@ public enum TerminalTypes {
 	*  通过终端值获取终端名称
 	*  @param value 终端值
 	*  @return java.lang.String
-	*  @date                    ：2018/11/13
+	*  @since                    ：2018/11/13
 	*  @author                  ：zc.ding@foxmail.com
 	*/
 	public static String getName(int value) {
@@ -78,7 +78,7 @@ public enum TerminalTypes {
 	*  通过终端值获取对应的枚举类型
 	*  @param value 终端值
 	*  @return com.yirun.framework.core.enums.TerminalTypes
-	*  @date                    ：2018/11/13
+	*  @since                    ：2018/11/13
 	*  @author                  ：zc.ding@foxmail.com
 	*/
 	public static TerminalTypes getTerminalTypes(int value) {
@@ -94,7 +94,7 @@ public enum TerminalTypes {
 	*  通过终端名称获取对应的枚举类型
 	*  @param name  终端名称
 	*  @return com.yirun.framework.core.enums.TerminalTypes
-	*  @date                    ：2018/11/13
+	*  @since                    ：2018/11/13
 	*  @author                  ：zc.ding@foxmail.com
 	*/
 	public static TerminalTypes getTerminalTypes(String name) {

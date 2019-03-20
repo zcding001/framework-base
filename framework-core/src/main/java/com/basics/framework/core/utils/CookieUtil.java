@@ -8,26 +8,25 @@ import javax.servlet.http.HttpServletRequest;
 *  @date                    ：2018/8/10
 *  @author                  ：zc.ding@foxmail.com
 */
-public class CookieUtil {
+public interface CookieUtil {
 
 	/**
 	 * 路径
 	 */
-	private static final String DEFAULT_PATH = "/";
+	String DEFAULT_PATH = "/";
 	/**
 	 * 有效期"会话"
 	 */
-	private static final int DEFAULT_MAX_AGE = -1;
+	int DEFAULT_MAX_AGE = -1;
 	
 	/**
-	 * @Described			: 创建cookie
+	 * 创建cookie
 	 * @author				: zc.ding
-	 * @date 				: 2016年12月29日
 	 * @param name cookie名称
 	 * @param value cookie值
-	 * @return
+	 * @return  Cookie
 	 */
-	public static Cookie createCookie(String name, String value){
+	static Cookie createCookie(String name, String value){
 		return createCookie(name, value, null, DEFAULT_MAX_AGE, DEFAULT_PATH);
 	}
 	
@@ -37,10 +36,9 @@ public class CookieUtil {
     *  @param value cookie值
     *  @param maxAge cookie有效期
 	*  @return javax.servlet.http.Cookie
-	*  @date                    ：2018/11/13
 	*  @author                  ：zc.ding@foxmail.com
 	*/
-	public static Cookie createCookie(String name, String value, int maxAge){
+	static Cookie createCookie(String name, String value, int maxAge){
 		return createCookie(name, value, null, maxAge, DEFAULT_PATH);
 	}
 	
@@ -52,10 +50,9 @@ public class CookieUtil {
     *  @param maxAge 有效期 
     *  @param path 路径
 	*  @return javax.servlet.http.Cookie
-	*  @date                    ：2018/11/13
 	*  @author                  ：zc.ding@foxmail.com
 	*/
-	public static Cookie createCookie(String name, String value, String domain, int maxAge, String path){
+	static Cookie createCookie(String name, String value, String domain, int maxAge, String path){
 		Cookie cookie = new Cookie(name, value);
 		cookie.setDomain(HttpSessionUtil.getRequest().getServerName());
 		cookie.setPath(DEFAULT_PATH);
@@ -72,14 +69,13 @@ public class CookieUtil {
 	}
 	
 	/**
-	 * @Described			: 获得指定name的cookie
-	 * @author				: zc.ding
-	 * @date 				: 2016年12月29日
-	 * @param request
+	 * 获得指定name的cookie
+	 * @author  zc.ding
+	 * @param request   HttpServletRequest
 	 * @param name cookie的名称
-	 * @return
+	 * @return  Cookie
 	 */
-	public static Cookie getCookie(HttpServletRequest request, String name){
+	static Cookie getCookie(HttpServletRequest request, String name){
 		Cookie[] cookies = request.getCookies();
 		if(cookies != null){
 			for(Cookie cookie : cookies){
@@ -95,10 +91,9 @@ public class CookieUtil {
 	*  获得指定name的cookie
 	*  @param name cookie的名称
 	*  @return javax.servlet.http.Cookie
-	*  @date                    ：2018/11/13
 	*  @author                  ：zc.ding@foxmail.com
 	*/
-	public static Cookie getCookie(String name){
+	static Cookie getCookie(String name){
 		Cookie[] cookies = HttpSessionUtil.getRequest().getCookies();
 		if(cookies != null){
 			for(Cookie cookie : cookies){
@@ -114,11 +109,11 @@ public class CookieUtil {
 	 * 加载指定cookie的Value值
 	 * @author	 zc.ding
 	 * @since 	 2017年5月21日
-	 * @param request
+	 * @param request HttpServletRequest
 	 * @param name cookie名称
-	 * @return
+	 * @return  null
 	 */
-	public static String getCookieValue(HttpServletRequest request, String name){
+	static String getCookieValue(HttpServletRequest request, String name){
 		Cookie cookie = getCookie(request, name);
 		if(cookie != null){
 			return cookie.getValue();
@@ -131,9 +126,9 @@ public class CookieUtil {
 	 * @author	 zc.ding
 	 * @since 	 2017年5月21日
 	 * @param name cookie名称
-	 * @return
+	 * @return  String
 	 */
-	public static String getCookieValue(String name){
+	static String getCookieValue(String name){
 		Cookie cookie = getCookie(name);
 		if(cookie != null){
 			return cookie.getValue();

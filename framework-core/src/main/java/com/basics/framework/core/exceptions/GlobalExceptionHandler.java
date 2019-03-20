@@ -15,12 +15,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * @Description : 全局异常处理
- * @Project : framework-core
- * @Program Name :
- *          com.yirun.framework.core.exception.GlobalExceptionHandler.java
- * @Author : zc.ding@foxmail.com
- */
+*  全局异常处理
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class GlobalExceptionHandler extends SimpleMappingExceptionResolver {
 
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);

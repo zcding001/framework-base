@@ -1,11 +1,10 @@
 package com.basics.framework.core.exceptions;
 
 /**
- * @Description   : 无权限异常
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.exception.NoAuthorityException.java
- * @Author        : zc.ding@foxmail.com
- */
+*  无权限异常
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class NoAuthorityException extends SecurityExpception {
 
 	private static final long serialVersionUID = -3028496821010699394L;

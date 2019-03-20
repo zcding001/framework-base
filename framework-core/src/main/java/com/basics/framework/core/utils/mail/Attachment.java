@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
 *  邮件附件
-*  @date                    ：2018/8/10
+*  @since                   ：2018/8/10
 *  @author                  ：zc.ding@foxmail.com
 */
 public class Attachment {

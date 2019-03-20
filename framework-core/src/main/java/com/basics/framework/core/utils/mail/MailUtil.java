@@ -12,11 +12,10 @@ import java.security.GeneralSecurityException;
 import java.util.*;
 
 /**
- * @Description   : 邮件发送工具类
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.utils.mail.MailUtil.java
- * @Author        : zc.ding@foxmail.com
- */
+*  邮件发送工具类
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class MailUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(MailUtil.class);
@@ -93,8 +92,8 @@ public class MailUtil {
 	}
 
 	/**
-	 *  @Description    : 初始邮件发送
-	 *  @Method_Name    : initMailSend
+	 *  初始邮件发送
+     *  
 	 *  @param userName	用户名
 	 *  @param password	密码
 	 *  @param fromAddr	邮件发送者（如:xxx@163.com）
@@ -130,15 +129,14 @@ public class MailUtil {
 		mailUtil.sendMail("cxjservice@hongkunjinfu.com",toAddrMap,"测试","测试");
 	}
 	/**
-	 *  @Description    : 带附件的邮件(收邮件人全是发送，不包括抄送/密送)
-	 *  @Method_Name    : sendMail
+	 *  带附件的邮件(收邮件人全是发送，不包括抄送/密送)
 	 *  @param fromAddr	发件人
 	 *  @param toAddr	收邮件人
 	 *  @param subject	主题
 	 *  @param context	内容
 	 *  @param att		附件
 	 *  @return         : boolean
-	 *  @Author         : zc.ding@foxmail.com
+	 *  @author         : zc.ding@foxmail.com
 	 */
 	public boolean sendMail(String fromAddr, String[] toAddr, String subject, String context, Attachment att) {
 		toAddrMap.put(Message.RecipientType.TO, toAddr);
@@ -146,14 +144,13 @@ public class MailUtil {
 	}
 
 	/**
-	 *  @Description    : 不带附件的邮件(收邮件人全是发送，不包括抄送/密送)
-	 *  @Method_Name    : sendMail
+	 *  不带附件的邮件(收邮件人全是发送，不包括抄送/密送)
 	 *  @param fromAddr	发件人
 	 *  @param toAddr	收邮件人
 	 *  @param subject	主题
 	 *  @param context	内容
 	 *  @return         : boolean
-	 *  @Author         : zc.ding@foxmail.com
+	 *  @author         : zc.ding@foxmail.com
 	 */
 	public boolean sendMail(String fromAddr, String[] toAddr, String subject, String context) {
 		toAddrMap.put(Message.RecipientType.TO, toAddr);
@@ -161,15 +158,14 @@ public class MailUtil {
 	}
 
 	/**
-	 *  @Description    : 不带附件的邮件
-	 *  @Method_Name    : sendMail
+	 *  不带附件的邮件
 	 *  @param fromAddr	发件人
 	 *  @param toAddrMap 收邮件人
 	 *  @param subject	主题
 	 *  @param context	内容
 	 *  @return         : boolean
-	 *  @Creation Date  : 2016年7月6日 下午2:43:22 
-	 *  @Author         : zc.ding@foxmail.com
+	 *  @since          : 2016年7月6日 下午2:43:22 
+	 *  @author         : zc.ding@foxmail.com
 	 */
 	public boolean sendMail(String fromAddr, Map<Message.RecipientType, String[]> toAddrMap, String subject,
 			String context) {
@@ -177,15 +173,14 @@ public class MailUtil {
 	}
 
 	/**
-	 *  @Description    : 邮件发送
-	 *  @Method_Name    : sendMail
+	 *  邮件发送
 	 *  @param fromAddr		发邮人
 	 *  @param toAddrMap	收件人
 	 *  @param subject		主题
 	 *  @param context		内容
 	 *  @param attachment	附件
 	 *  @return         : boolean
-	 *  @Author         : zc.ding@foxmail.com
+	 *  @author         : zc.ding@foxmail.com
 	 */
 	public boolean sendMail(String fromAddr, Map<Message.RecipientType, String[]> toAddrMap, String subject,
 			String context, Attachment attachment) {
@@ -245,12 +240,11 @@ public class MailUtil {
 	}
 
 	/**
-	 *  @Description    : 取得Email Address
-	 *  @Method_Name    : getEmailAddress
+	 *  取得Email Address
 	 *  @param toAddr
 	 *  @throws AddressException
 	 *  @return         : InternetAddress[]
-	 *  @Author         : zc.ding@foxmail.com
+	 *  @author         : zc.ding@foxmail.com
 	 */
 	private InternetAddress[] getEmailAddress(String[] toAddr) throws AddressException {
 		InternetAddress[] tos = new InternetAddress[toAddr.length];

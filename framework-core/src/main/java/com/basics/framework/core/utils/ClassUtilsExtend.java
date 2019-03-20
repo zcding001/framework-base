@@ -8,11 +8,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * @Description   : Spring工具类ClassUtils扩展 
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.utils.ClassUtilsExtend.java
- * @Author        : zc.ding@foxmail.com
- */
+*  
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public abstract class ClassUtilsExtend extends ClassUtils {
 
     /**

@@ -38,11 +38,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Description : 基于HttpClient实现服务端模拟请求http、https请求
- * @Project : finance-user-models
- * @Program Name : com.yirun.finance.user.utils.HttpClientUtil.java
- * @Author : zc.ding@foxmail.com
- */
+*  基于HttpClient实现服务端模拟请求http、https请求
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class HttpClientUtils {
 	/**
 	 * Logger for this class

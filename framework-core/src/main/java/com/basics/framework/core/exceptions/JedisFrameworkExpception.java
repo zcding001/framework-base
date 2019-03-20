@@ -1,11 +1,10 @@
 package com.basics.framework.core.exceptions;
+
 /**
- * 
- * @Description   : JDEDIS自定义异常类
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.exception.JedisExpception.java
- * @Author        : xuhuiliu@hongkun.com.cn 刘旭辉
- */
+*  redis自定义异常类
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class JedisFrameworkExpception extends BaseException {
 
 	private static final long serialVersionUID = 1L;

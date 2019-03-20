@@ -1,14 +1,13 @@
-package com.basics.framework.core.singletons;
+package com.basics.framework.core.utils;
 
 import java.util.concurrent.*;
 
 /**
- * 默认线程池
- *
- * @author zc.ding
- * @create 2018/9/28
- */
-public class SingletonThreadPool {
+*  默认线程池
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
+public class ThreadPoolUtil {
     
     private static volatile ExecutorService FIXED_THREAD_POOL;
     private final static String FIXED_THREAD_POOL_LOCK = "FIXED_THREAD_POOL";
@@ -19,7 +18,7 @@ public class SingletonThreadPool {
     private static volatile ExecutorService CACHED_THREAD_POOL;
     private final static String CACHED_THREAD_POOL_LOCK = "CACHED_THREAD_POOL";
     
-    private SingletonThreadPool(){}
+    private ThreadPoolUtil(){}
     
     /**
     *  通过FixedThreadPool池执行业务操作

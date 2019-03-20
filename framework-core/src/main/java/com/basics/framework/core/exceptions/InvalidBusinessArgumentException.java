@@ -1,11 +1,10 @@
 package com.basics.framework.core.exceptions;
 
 /**
- * @Description   : 无效的业务参数异常
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.exception.InvalidBusinessArgumentException.java
- * @Author        : zc.ding@foxmail.com
- */
+*  无效的业务参数异常
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class InvalidBusinessArgumentException extends BusinessException {
 
 	private static final long serialVersionUID = 1L;

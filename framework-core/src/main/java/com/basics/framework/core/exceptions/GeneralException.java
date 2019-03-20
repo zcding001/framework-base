@@ -1,11 +1,10 @@
 package com.basics.framework.core.exceptions;
 
 /**
- * @Description   : 普通异常
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.exception.GeneralException.java
- * @Author        : zc.ding@foxmail.com
- */
+*  普通异常
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class GeneralException extends BaseException {
 
 	private static final long serialVersionUID = 7907045998462038823L;

@@ -26,10 +26,10 @@ public interface AopUtils {
 	 * 解析代理方法的上的注解
 	 * @author	 zc.ding
 	 * @since 	 2017年5月21日
-	 * @param point
-	 * @param clazz
-	 * @return
-	 * @throws NoSuchMethodException
+	 * @param point 切入点
+	 * @param clazz 代理对象
+	 * @return T
+	 * @throws NoSuchMethodException    未找到方法
 	 */
 	static <T extends Annotation> T getAnnotation(JoinPoint point, Class<T> clazz) throws NoSuchMethodException{
 		return AnnotationUtils.findAnnotation(getTargetMethod(point), clazz);
@@ -39,10 +39,10 @@ public interface AopUtils {
 	 * 解析代理类上的注解
 	 * @author	 zc.ding
 	 * @since 	 2017年5月22日
-	 * @param point
-	 * @param clazz
-	 * @return
-	 * @throws NoSuchMethodException
+	 * @param point 切入点
+	 * @param clazz 代理对象
+	 * @return T
+	 * @throws NoSuchMethodException    未找到方法
 	 */
     static <T extends Annotation> T getClassAnnotation(JoinPoint point, Class<T> clazz) throws NoSuchMethodException{
 		return AnnotationUtils.findAnnotation(point.getTarget().getClass(), clazz);
@@ -52,9 +52,9 @@ public interface AopUtils {
 	 * 解析代理方法的名称
 	 * @author	 zc.ding
 	 * @since 	 2017年5月21日
-	 * @param joinPoint
-	 * @return
-	 * @throws NoSuchMethodException
+	 * @param joinPoint 切入点
+	 * @return Method
+	 * @throws NoSuchMethodException    未找到方法
 	 */
     static Method getTargetMethod(JoinPoint joinPoint) throws NoSuchMethodException{
 		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
@@ -71,7 +71,7 @@ public interface AopUtils {
 	 * @since 	 2017年5月21日
 	 * @param key
 	 * @param args
-	 * @return
+	 * @return  String
 	 */
     static String getParamValue(String key, Object[] args) {
 		ScriptEngine engine = (new ScriptEngineManager()).getEngineByName("js");
@@ -89,12 +89,11 @@ public interface AopUtils {
 	}
 	
 	/**
-	 *  @Description    : 执行公式 例如  a == b ? "1" : "0"
-	 *  @Method_Name    : getParamValue
-	 *  @param formula
+	 *  执行公式 例如  a == b ? "1" : "0"
+	 *  @param formula  公式
 	 *  @return         : String
-	 *  @Creation Date  : 2017年12月5日 下午3:10:17 
-	 *  @Author         : zhichaoding@hongkun.com zc.ding
+	 *  @since          : 2017年12月5日 下午3:10:17 
+	 *  @author         : zhichaoding@hongkun.com zc.ding
 	 */
     static String getParamValue(String formula) {
 		ScriptEngine engine = (new ScriptEngineManager()).getEngineByName("js");

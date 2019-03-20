@@ -18,11 +18,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Description   : 操作日志
- * @Project       : finance-user-models
- * @Program Name  : com.hongkun.finance.user.support.security.aop.ActionLogParseAop.java
- * @Author        : zc.ding@foxmail.com
- */
+*  操作日志
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 @Component
 @Aspect
 @Order(value = Ordered.HIGHEST_PRECEDENCE + 1)
@@ -68,5 +67,4 @@ public class ActionLogParseAop{
 		}
 		return point.proceed();
 	}
-	
 }

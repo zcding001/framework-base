@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
 *  防重复提交TOKEN
-*  @date                    ：2018/8/10
+*  @since                   ：2018/8/10
 *  @author                  ：zc.ding@foxmail.com
 */
 @Target(ElementType.METHOD)
@@ -15,11 +15,9 @@ import java.lang.annotation.Target;
 public @interface Token {
 	
 	/**
-	 * @Description   : token的操作类别（Operate）
-	 * @Project       : framework-core
-	 * @Program Name  : com.yirun.framework.core.annotations.Token.java
-	 * @Author        : zc.ding@foxmail.com
-	 */
+	*  token的操作类别（Operate）
+	*  @author                  ：zc.ding@foxmail.com
+	*/
 	public enum Ope{
 		/**
 		 * 添加token
@@ -41,8 +39,8 @@ public @interface Token {
 	 * 		REFRESH:validate and refresh<br>
 	 * 		REMOVE:validate and remove <br>
 	 * @author	 zc.ding
-	 * @since 	 2017年5月21日
-	 * @return
+	 * @since 	 2018/8/10
+	 * @return  Ope
 	 */
 	Ope operate() default Ope.REFRESH;
 }

@@ -1,11 +1,10 @@
 package com.basics.framework.core.exceptions;
 
 /**
- * @Description   : 内部错误
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.exception.InnerErrorException.java
- * @Author        : zc.ding@foxmail.com
- */
+*  内部错误
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class InnerErrorException extends BaseException {
 
     private static final long serialVersionUID = -680887204493573535L;

@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
 *  响应消息
-*  @date                    ：2018/8/10
+*  @since                   ：0.0.1
 *  @author                  ：zc.ding@foxmail.com
 */
 public class ResponseEntity<T> implements Serializable {
@@ -88,20 +88,18 @@ public class ResponseEntity<T> implements Serializable {
 	/**
 	*  判断是不是成功状态
 	*  @return boolean
-	*  @date                    ：2018/11/13
+	*  @since                   ：2018/11/13
 	*  @author                  ：zc.ding@foxmail.com
 	*/
 	public boolean validSuc() {
-		if(this.resStatus == Constants.SUCCESS)
-			return true;
-		return false;
+		return !(this.resStatus == Constants.SUCCESS);
 	}
 	
 	/**
 	*  初始化错误对象
-	*  @param msg
-	*  @return ResponseEntity<?>
-	*  @date                    ：2018/11/13
+	*  @param msg   提示信息
+	*  @return com.basics.framework.core.models.ResponseEntity<?>
+	*  @since                   ：2019/3/20
 	*  @author                  ：zc.ding@foxmail.com
 	*/
 	public static ResponseEntity<?> error(Object msg){
@@ -110,8 +108,8 @@ public class ResponseEntity<T> implements Serializable {
 	
 	/**
 	*  初始化成功
-	*  @return ResponseEntity<?>
-	*  @date                    ：2018/11/13
+	*  @return com.basics.framework.core.models.ResponseEntity<?>
+	*  @since                   ：2019/3/20
 	*  @author                  ：zc.ding@foxmail.com
 	*/
 	public static ResponseEntity<?> success(){

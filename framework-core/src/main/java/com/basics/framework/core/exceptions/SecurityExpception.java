@@ -1,11 +1,10 @@
 package com.basics.framework.core.exceptions;
 
 /**
- * @Description   : 安全异常
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.exception.SecurityExpception.java
- * @Author        : zc.ding@foxmail.com
- */
+*  安全异常
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class SecurityExpception extends BaseException {
 
 	private static final long serialVersionUID = 8985547550244289493L;

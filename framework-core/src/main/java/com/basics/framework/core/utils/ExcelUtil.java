@@ -19,23 +19,20 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /**
- * @Description   : excel导入导出工具类
- * @Project       : finance-roster-service
- * @Program Name  : com.yirun.finance.roster.service.impl.ExcelUtil.java
- * @Author        : zc.ding@foxmail.com
- */
-
+*  excel导入导出工具类
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class ExcelUtil {
 
 	private ExcelUtil(){}
 	
 	/**
-	 *  @Description    : 解析excel中所有数据
-	 *  @Method_Name    : getDataList
+	 *  解析excel中所有数据
 	 *  @param filePath 文件路径
 	 *  @return         : List<List<String>>
-	 *  @Creation Date  : 2017年10月18日 上午11:20:44 
-	 *  @Author         : zc.ding@foxmail.com
+	 *  @since          : 2017年10月18日 上午11:20:44 
+	 *  @author         : zc.ding@foxmail.com
 	 */
 	public static List<List<String>> getDataList(String filePath){
 		List<List<String>> dataList = new ArrayList<>();
@@ -100,13 +97,12 @@ public class ExcelUtil {
 
 	/**
 	 * 
-	 *  @Description    : 获得excel模板
-	 *  @Method_Name    : getExcel
+	 *  获得excel模板
 	 *  @param list	列名集合，比填列以*开头
 	 *  @param dataList	导出数据集合
 	 *  @return         : Workbook
-	 *  @Creation Date  : 2017年10月18日 上午11:29:46 
-	 *  @Author         : zc.ding@foxmail.com
+	 *  @since          : 2017年10月18日 上午11:29:46 
+	 *  @author         : zc.ding@foxmail.com
 	 */
 	public static Workbook getExcel(List<String> list, List<List<String>> dataList){
 		Workbook workbook = new HSSFWorkbook();
@@ -228,17 +224,15 @@ public class ExcelUtil {
 	 
 	/**
 	 * 
-	 *  @Description    : 导出excel 工具类
-	 *  @Method_Name    : exportExcel
+	 *  导出excel 工具类
 	 *  @param fileName  表名
 	 *  @param sheetName  sheet名称
 	 *  @param dataList   数据源
 	 *  @param fieldMap   列名和数据源中字段对应关系
 	 *  @param sheetSize  sheet页最大记录数
-	 *  @return         : Workbook
-	 *  @throws Exception 
-	 *  @Creation Date  : 2018年1月12日 下午5:12:50 
-	 *  @Author         : xuhuiliu@honghun.com.cn 刘旭辉
+	 *  @throws Exception 异常
+	 *  @since          : 2018年1月12日 下午5:12:50 
+	 *  @author         : zc.ding@foxmail.com
 	 */
 	public static <T> void exportExcel(String fileName,String sheetName,List<T> dataList,LinkedHashMap<String,String> fieldMap,
 			int sheetSize,OutputStream out)throws ExcelException{
@@ -355,17 +349,15 @@ public class ExcelUtil {
 
    /**
     * 
-    *  @Description    : excel导出sheet赋值
-    *  @Method_Name    : fillSheet
-    *  @param sheet    
+    *  excel导出sheet赋值
+    *  @param sheet     sheet 
     *  @param list        数据集合
     *  @param fieldMap    数据字段和表格中展示的标题名称对应关系
     *  @param firstIndex  开始下标（从list的第几条开始）
     *  @param lastIndex   结束下标（到list的第几条结束）
-    *  @throws ExcelException
-    *  @return         : void
-    *  @Creation Date  : 2018年1月15日 下午2:24:41 
-    *  @Author         : xuhuiliu@honghun.com.cn 刘旭辉
+    *  @throws ExcelException 异常
+    *  @since          : 2018年1月15日 下午2:24:41 
+    *  @author         : 
     */
 	private static <T> void fillSheet(Sheet sheet,List<T> list,LinkedHashMap<String,String> fieldMap,
             int firstIndex,int lastIndex)throws ExcelException{

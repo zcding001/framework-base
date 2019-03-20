@@ -1,11 +1,10 @@
 package com.basics.framework.core.exceptions;
 
 /**
- * @Description   : 业务异常
- * @Project       : framework-core
- * @Program Name  : com.yirun.framework.core.exception.BusinessException.java
- * @Author        : zc.ding@foxmail.com
- */
+*  业务异常
+*  @since                   ：0.0.1
+*  @author                  ：zc.ding@foxmail.com
+*/
 public class BusinessException extends BaseException {
 
 	private static final long serialVersionUID = -4796404349526245258L;
