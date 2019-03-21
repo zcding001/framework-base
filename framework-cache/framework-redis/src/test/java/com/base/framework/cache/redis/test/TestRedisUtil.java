@@ -21,7 +21,6 @@ import static org.junit.Assert.*;
  * @author zc.ding
  * @since  2019/3/21
  */
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AppServerApplication.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
