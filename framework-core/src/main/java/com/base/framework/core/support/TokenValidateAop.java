@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 public class TokenValidateAop {
 
-    @Autowired
+    @Autowired(required = false)
     private TokenHandler tokenHandler;
     
     private static final Logger logger = LoggerFactory.getLogger(TokenValidateAop.class);

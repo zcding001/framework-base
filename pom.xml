@@ -36,6 +36,7 @@
         <commons-io.version>2.6</commons-io.version>-->
         <common.version>3.8.1</common.version>
         <zxing.version>3.3.3</zxing.version>
+        <javamail.version>1.6.2</javamail.version>
     </properties>
 
     <!-- JAR包引用 -->
@@ -121,7 +122,13 @@
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>javax.mail-api</artifactId>
-            <version>1.6.2</version>
+            <version>${javamail.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.50</version>
         </dependency>
 
 

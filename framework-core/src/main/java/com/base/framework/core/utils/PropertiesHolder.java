@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
  * new PropertiesHolder().setProperties(cache)
  * </pre>
  */
-@Component("propertiesHolder")
+//@Component("propertiesHolder")
 public class PropertiesHolder implements ApplicationContextAware, ServletContextAware, InitializingBean {
 
 //	private static Log log = LogFactory.getLog("PropertiesHolderOld");

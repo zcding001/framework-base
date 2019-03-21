@@ -31,7 +31,7 @@ public class ActionLogParseAop{
     //用于匹配msg中{args[0].id} 或 {args[1].state == 1 ? '禁用' : '解禁'}
     private final static Pattern pattern = Pattern.compile("([\\{ *args\\[\\d]+\\][^\\}]* *\\})");
     
-	@Autowired
+	@Autowired(required = false)
     ActionLogHandler actionLogHandler;
 	
 	private ExecutorService executorService = new ForkJoinPool(Runtime.getRuntime().availableProcessors(),

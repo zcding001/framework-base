@@ -152,8 +152,7 @@ public class SerializeUtil {
 	 * @author				: zc.ding
 	 * @date 				: 2016年11月29日
 	 * @param buf
-	 * @param clazz
-	 * @return
+	 * @return  T
 	 */
     public static <T> T unSerializeKryo(byte[] buf) {
     	if(buf == null){
