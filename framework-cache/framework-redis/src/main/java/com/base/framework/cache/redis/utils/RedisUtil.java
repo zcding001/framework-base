@@ -1,10 +1,10 @@
-package com.base.framework.cache.redis;
+package com.base.framework.cache.redis.utils;
 
 import com.base.framework.core.utils.ApplicationContextUtils;
 import io.lettuce.core.RedisException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,10 +22,14 @@ import java.util.function.Supplier;
  * @since  2018/11/15
  */
 @Component
-@DependsOn("applicationContextUtils")
+@DependsOn({"applicationContextUtils"})
 public class RedisUtil implements InitializingBean {
     
     private static RedisTemplate<String, Object> redisTemplate;
+    private static HashOperations<String, String, Object> hashOperations;
+    private static ListOperations<String, Object> listOperations;
+    private static SetOperations<String, Object> setOperations;
+    private static ZSetOperations<String, Object> zSetOperations;
     
     private RedisUtil(){}
 
@@ -94,9 +98,33 @@ public class RedisUtil implements InitializingBean {
         }
     }
 
+    public static RedisTemplate<String, Object> getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    public static HashOperations<String, String, Object> getHashOperations() {
+        return hashOperations;
+    }
+
+    public static ListOperations<String, Object> getListOperations() {
+        return listOperations;
+    }
+
+    public static SetOperations<String, Object> getSetOperations() {
+        return setOperations;
+    }
+
+    public static ZSetOperations<String, Object> getzSetOperations() {
+        return zSetOperations;
+    }
+
     @Override
     public void afterPropertiesSet() {
         redisTemplate = ApplicationContextUtils.getBean("redisTemplate");
+        hashOperations = redisTemplate.opsForHash();
+        listOperations = redisTemplate.opsForList();
+        setOperations = redisTemplate.opsForSet();
+        zSetOperations = redisTemplate.opsForZSet();
     }
 
     /**
@@ -151,7 +179,7 @@ public class RedisUtil implements InitializingBean {
     *  @since                   ：2019/3/21
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static Long delBatch(List<String> keys){
+    public static Long del(List<String> keys){
         return redisTemplate.delete(keys);
     }
     
@@ -166,6 +194,17 @@ public class RedisUtil implements InitializingBean {
     public static boolean set(String key, Object value) {
         return exeCommand((o) -> redisTemplate.opsForValue().set(key, value));
     }
+
+    /**
+    *  批量放入键值对
+    *  @param map   键值对集合
+    *  @return boolean
+    *  @since                   ：2019/3/22
+    *  @author                  ：zc.ding@foxmail.com
+    */
+    public static <T> boolean set(Map<String, T> map) {
+        return exeCommand((o) -> redisTemplate.opsForValue().multiSet(map));
+    }
     
     /**
     *  获取对象
@@ -177,6 +216,18 @@ public class RedisUtil implements InitializingBean {
     @SuppressWarnings("unchecked")
     public static <T> T get(String key) {
         return Objects.isNull(key) ? null : (T)(redisTemplate.opsForValue().get(key));
+    }
+
+    /**
+    *  批量获得键值对
+    *  @param keys  键集合
+    *  @return java.util.List<T>
+    *  @since                   ：2019/3/22
+    *  @author                  ：zc.ding@foxmail.com
+    */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> get(List<String> keys) {
+        return (List<T>)redisTemplate.opsForValue().multiGet(keys);
     }
 
     /**
@@ -214,7 +265,7 @@ public class RedisUtil implements InitializingBean {
     *  @since                   ：2019/3/21
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static Boolean mSet(String key, Map<String, Object> map) {
+    public static Boolean hSet(String key, Map<String, Object> map) {
         return exeCommand((o) -> redisTemplate.opsForHash().putAll(key, map));
     }
     
@@ -227,8 +278,8 @@ public class RedisUtil implements InitializingBean {
     *  @since                   ：2019/3/21
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static Boolean mSet(String key, Map<String, Object> map, long time) {
-        return mSet(key, map) && expire(key, time);
+    public static Boolean hSet(String key, Map<String, Object> map, long time) {
+        return hSet(key, map) && expire(key, time);
     }
 
     /**
@@ -240,7 +291,7 @@ public class RedisUtil implements InitializingBean {
     *  @since                   ：2019/3/21
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static Boolean mSet(String key, String item, Object value) {
+    public static Boolean hSet(String key, String item, Object value) {
         return exeCommand((o) -> redisTemplate.opsForHash().put(key, item, value));
     }
     
@@ -251,7 +302,7 @@ public class RedisUtil implements InitializingBean {
     *  @since                   ：2019/3/21
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static Map<Object, Object> mGet(String key) {
+    public static Map<Object, Object> hGet(String key) {
         return redisTemplate.opsForHash().entries(key);
     }
     
@@ -264,7 +315,7 @@ public class RedisUtil implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     @SuppressWarnings("unchecked")
-    public static <T> T mGet(String key, String item) {
+    public static <T> T hGet(String key, String item) {
         return (T)redisTemplate.opsForHash().get(key, item);
     }
     
@@ -276,7 +327,7 @@ public class RedisUtil implements InitializingBean {
     *  @since                   ：2019/3/21
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static Boolean mHaskey(String key, String item) {
+    public static Boolean hHaskey(String key, String item) {
         return redisTemplate.opsForHash().hasKey(key, item);
     }
 
@@ -289,7 +340,7 @@ public class RedisUtil implements InitializingBean {
     *  @since                   ：2019/3/21
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static Long mIncrement(String key, String item, long num) {
+    public static Long hIncrement(String key, String item, long num) {
         return num == 0 ? Long.valueOf(num) : redisTemplate.opsForHash().increment(key, item, num);
     }
     
@@ -301,7 +352,7 @@ public class RedisUtil implements InitializingBean {
     *  @since                   ：2019/3/21
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static Long mDel(String key, Object... items) {
+    public static Long hDel(String key, Object... items) {
         return redisTemplate.opsForHash().delete(key, items);
     }
 
@@ -316,7 +367,7 @@ public class RedisUtil implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static Long sSet(String key, Object... values) {
-        return exeCommandForLong(() -> redisTemplate.opsForSet().add(key, values));
+        return exeCommandForLong(() -> setOperations.add(key, values));
     }
 
     /**
@@ -329,7 +380,7 @@ public class RedisUtil implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static Long sSet(String key, long time, Object... values) {
-        Long count = exeCommandForLong(() -> redisTemplate.opsForSet().add(key, values));
+        Long count = exeCommandForLong(() -> setOperations.add(key, values));
         expire(key, time);
         return count;
     }
@@ -343,7 +394,7 @@ public class RedisUtil implements InitializingBean {
     */
     @SuppressWarnings("unchecked")
     public static <T> Set<T> sGet(String key) {
-        return (Set<T>)redisTemplate.opsForSet().members(key);
+        return (Set<T>)setOperations.members(key);
     }
 
     /**
@@ -354,8 +405,8 @@ public class RedisUtil implements InitializingBean {
     *  @since                   ：2019/3/21
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static Boolean sHasKey(String key, Object value) {
-        return exeCommandForBoolean(() -> redisTemplate.opsForSet().isMember(key, value));
+    public static Boolean sHasValue(String key, Object value) {
+        return exeCommandForBoolean(() -> setOperations.isMember(key, value));
     }
 
     /**
@@ -366,7 +417,7 @@ public class RedisUtil implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static Long sSize(String key) {
-        return exeCommandForLong(() -> redisTemplate.opsForSet().size(key));
+        return exeCommandForLong(() -> setOperations.size(key));
     }
 
     /**
@@ -378,7 +429,7 @@ public class RedisUtil implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static Long sDel(String key, Object... values) {
-        return exeCommandForLong(() -> redisTemplate.opsForSet().remove(key, values));
+        return exeCommandForLong(() -> setOperations.remove(key, values));
     }
 
 
@@ -393,7 +444,8 @@ public class RedisUtil implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static Long lSet(String key, List<Object> list) {
-        return exeCommandForLong(() -> redisTemplate.opsForList().rightPushAll(key, list));
+        del(key);
+        return exeCommandForLong(() -> listOperations.rightPushAll(key, list));
     }
 
     /**
@@ -406,7 +458,7 @@ public class RedisUtil implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static Long lSet(String key, List<Object> list, long time) {
-        Long count = exeCommandForLong(() -> redisTemplate.opsForList().rightPushAll(key, list));
+        Long count = exeCommandForLong(() -> listOperations.rightPushAll(key, list));
         expire(key, time);
         return count;
     }
@@ -421,7 +473,7 @@ public class RedisUtil implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static boolean lUpdate(String key, long index, Object value) {
-        return exeCommand((o) -> redisTemplate.opsForList().set(key, index, value));
+        return exeCommand((o) -> listOperations.set(key, index, value));
     }
 
     /**
@@ -446,7 +498,7 @@ public class RedisUtil implements InitializingBean {
     */
     @SuppressWarnings("unchecked")
     public static <T> List<T> lGet(String key, long start, long end) {
-        return (List<T>)(redisTemplate.opsForList().range(key, start, end));
+        return (List<T>)(listOperations.range(key, start, end));
     }
 
     /**
@@ -457,7 +509,7 @@ public class RedisUtil implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static Long lSize(String key) {
-        return exeCommandForLong(() -> redisTemplate.opsForList().size(key));
+        return exeCommandForLong(() -> listOperations.size(key));
     }
 
     /**
@@ -470,7 +522,7 @@ public class RedisUtil implements InitializingBean {
     */
     @SuppressWarnings("unchecked")
     public static <T> T lGet(String key, long index) {
-        return (T)exeCommandForObject(() -> redisTemplate.opsForList().index(key, index));
+        return (T)exeCommandForObject(() -> listOperations.index(key, index));
     }
     
 }

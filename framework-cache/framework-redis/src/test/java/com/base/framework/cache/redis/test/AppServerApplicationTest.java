@@ -1,4 +1,4 @@
-package com.base.framework.cache.redis;
+package com.base.framework.cache.redis.test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 *  @author                  ：zc.ding@foxmail.com
 */
 @SpringBootApplication(scanBasePackages = {"com.base.framework"})
-public class AppServerApplication {
+public class AppServerApplicationTest {
     
     public static void main(String[] args) {
-        SpringApplication.run(AppServerApplication.class, args);
+        SpringApplication.run(AppServerApplicationTest.class, args);
     }
 
 }
