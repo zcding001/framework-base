@@ -1,7 +1,7 @@
 package com.base.framework.cache.redis.utils;
 
+import com.base.framework.cache.redis.exceptions.RedisFrameworkExpception;
 import com.base.framework.core.utils.ApplicationContextUtils;
-import io.lettuce.core.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @DependsOn("applicationContextUtils")
 public class DistributedLock implements InitializingBean {
 
-    private static Logger logger = LoggerFactory.getLogger(DistributedLock.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DistributedLock.class);
     
     private static RedisTemplate<String, Object> redisTemplate;
 
@@ -61,7 +61,7 @@ public class DistributedLock implements InitializingBean {
     */
     public static boolean tryLock(String key, long expire, long wait) {
         if (expire < MIN_DEFAULT_TIME || expire > MAX_DEFAULT_TIME || wait < MIN_DEFAULT_TIME || wait > MAX_DEFAULT_TIME) {
-            throw new RedisException("过期时间, 有效时间必须在[1, 30]之间");
+            throw new RedisFrameworkExpception("过期时间, 有效时间必须在[1, 30]之间");
         }
         try {
             wait = wait * 1000;
@@ -81,7 +81,7 @@ public class DistributedLock implements InitializingBean {
                 Thread.sleep(10);
             }
         } catch (Exception e) {
-            logger.error("获取分布式锁异常.", e);
+            LOG.error("获取分布式锁异常.", e);
         }
         return false;
     }
@@ -93,7 +93,7 @@ public class DistributedLock implements InitializingBean {
     *  @since                   ：2019/3/22
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static boolean freeLock(String key) {
+    public static boolean unLock(String key) {
         long oldCurrTime = threadLocal.get();
         threadLocal.remove();
         Long deadTime = (Long)redisTemplate.opsForValue().get(key);

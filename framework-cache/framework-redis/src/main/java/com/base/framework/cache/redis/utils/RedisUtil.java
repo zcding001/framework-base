@@ -1,7 +1,7 @@
 package com.base.framework.cache.redis.utils;
 
+import com.base.framework.cache.redis.exceptions.RedisFrameworkExpception;
 import com.base.framework.core.utils.ApplicationContextUtils;
-import io.lettuce.core.RedisException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.*;
@@ -43,7 +43,7 @@ public class RedisUtil implements InitializingBean {
     private static <T> Boolean exeCommand(Consumer<T> consumer) {
         try {
             consumer.accept(null);
-        } catch (RedisException e) {
+        } catch (RedisFrameworkExpception e) {
             e.printStackTrace();
             return false;
         }
@@ -60,7 +60,7 @@ public class RedisUtil implements InitializingBean {
     private static Long exeCommandForLong(Supplier<Long> supplier) {
         try {
             return supplier.get();
-        } catch (RedisException e) {
+        } catch (RedisFrameworkExpception e) {
             e.printStackTrace();
             return 0L;
         }
@@ -76,7 +76,7 @@ public class RedisUtil implements InitializingBean {
     private static Boolean exeCommandForBoolean(Supplier<Boolean> supplier) {
         try {
             return supplier.get();
-        } catch (RedisException e) {
+        } catch (RedisFrameworkExpception e) {
             e.printStackTrace();
             return false;
         }
@@ -92,7 +92,7 @@ public class RedisUtil implements InitializingBean {
     private static Object exeCommandForObject(Supplier<Object> supplier) {
         try {
             return supplier.get();
-        } catch (RedisException e) {
+        } catch (RedisFrameworkExpception e) {
             e.printStackTrace();
             return null;
         }
