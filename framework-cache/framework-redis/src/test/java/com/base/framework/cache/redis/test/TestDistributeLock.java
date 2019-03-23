@@ -33,7 +33,7 @@ public class TestDistributeLock {
     @Test
     public void testFreeLock() {
         assertTrue(DistributedLock.tryLock("lock", 60, 60));
-        assertTrue(DistributedLock.unLock("lock"));
+        assertTrue(DistributedLock.unLock());
     }
     
     @Test
@@ -57,7 +57,7 @@ public class TestDistributeLock {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }finally{
-                    DistributedLock.unLock("lock");
+                    DistributedLock.unLock();
                 }
             });
         }

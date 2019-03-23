@@ -130,23 +130,11 @@ public final class Constants {
 	 * 失败 默认值999
 	 */
 	public static final int ERROR = 999;
-
-	/**
-	 * 锁的前缀
-	 */
-	public static final String LOCK_PREFFIX = "LOCK_";
+	
 	/**
 	 * 锁过期时间 默认 5s
 	 */
 	public static final int LOCK_EXPIRES = 5;
-	/**
-	 * 锁最大过期时间30s
-	 */
-	public static final int LOCK_EXPIRES_MAX = 30;
-	/**
-	 * 锁最小过期时间1s
-	 */
-	public static final int LOCK_EXPIRES_MIN = 1;
 	/**
 	 * 等待锁时间：5s
 	 */
@@ -154,13 +142,13 @@ public final class Constants {
 	/**
 	 * 等待锁最大时间：30s
 	 */
-	public static final int LOCK_WAITTIME_MAX = 30;
+	public static final int LOCK_MAX_TIME = 30;
 	/**
 	 * 等待锁最小时间：1s
 	 */
-	public static final int LOCK_WAITTIME_MIN = 1;
+	public static final int LOCK_MIN_TIME = 1;
 	/**
-	 * openapi与服务端交互的SESSIONID的key值
+	 * app与服务端交互的SESSIONID的key值
 	 */
 	public static final String SESSION_ID_KEY = "sessionId";
     /**

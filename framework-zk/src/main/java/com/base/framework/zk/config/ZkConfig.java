@@ -17,5 +17,9 @@ import org.springframework.stereotype.Component;
 public class ZkConfig {
 
     private String address;
+    private int sessionTimeout;
+    private long waitConnTimeout;
+    private int fairLock;
+    
     
 }

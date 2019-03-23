@@ -1,6 +1,7 @@
 package com.base.framework.cache.redis.utils;
 
 import com.base.framework.cache.redis.exceptions.RedisFrameworkExpception;
+import com.base.framework.core.commons.Constants;
 import com.base.framework.core.utils.ApplicationContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,20 +25,18 @@ public class DistributedLock implements InitializingBean {
     private static final Logger LOG = LoggerFactory.getLogger(DistributedLock.class);
     
     private static RedisTemplate<String, Object> redisTemplate;
-
+    /**用于存储锁的内容**/
     private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
+    private static ThreadLocal<String> KEY_THREAD_LOCAK = new ThreadLocal<>();
     
-    /** 最小轮询间隔时间1000毫秒 **/
-    private final static long DEFAULT_POLL_TIME = 1000;
-    /** 默认等待时间5秒 **/
-    private final static long DEFAULT_WAIT_TIME = 5;
-    /** 默认过期时间5秒 **/
-    private final static long DEFAULT_EXPIRE_TIME = 5;
-    /** 最小默认时间1秒 **/
-    private final static long MIN_DEFAULT_TIME = 1;
-    /** 最大默认时间30秒 **/
-    private final static long MAX_DEFAULT_TIME = 30;
-
+//    /** 默认等待时间5秒 **/
+//    private final static long DEFAULT_WAIT_TIME = 5;
+//    /** 默认过期时间5秒 **/
+//    private final static long DEFAULT_EXPIRE_TIME = 5;
+//    /** 最小默认时间1秒 **/
+//    private final static long MIN_DEFAULT_TIME = 1;
+//    /** 最大默认时间30秒 **/
+//    private final static long MAX_DEFAULT_TIME = 30;
 
     /**
     *  获得分布式锁
@@ -47,7 +46,7 @@ public class DistributedLock implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static boolean tryLock(String key) {
-        return tryLock(key, DEFAULT_EXPIRE_TIME, DEFAULT_WAIT_TIME);    
+        return tryLock(key, Constants.LOCK_EXPIRES, Constants.LOCK_WAITTIME);    
     }
     
     /**
@@ -60,9 +59,11 @@ public class DistributedLock implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static boolean tryLock(String key, long expire, long wait) {
-        if (expire < MIN_DEFAULT_TIME || expire > MAX_DEFAULT_TIME || wait < MIN_DEFAULT_TIME || wait > MAX_DEFAULT_TIME) {
+        if (expire < Constants.LOCK_MIN_TIME || expire > Constants.LOCK_MAX_TIME || wait < Constants.LOCK_MIN_TIME || 
+                wait > Constants.LOCK_MAX_TIME) {
             throw new RedisFrameworkExpception("过期时间, 有效时间必须在[1, 30]之间");
         }
+        KEY_THREAD_LOCAK.set(key);
         try {
             wait = wait * 1000;
             expire = expire * 1000;
@@ -88,14 +89,15 @@ public class DistributedLock implements InitializingBean {
 
     /**
     *  释放锁
-    *  @param key   键
     *  @return boolean
     *  @since                   ：2019/3/22
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static boolean unLock(String key) {
+    public static boolean unLock() {
         long oldCurrTime = threadLocal.get();
         threadLocal.remove();
+        String key = KEY_THREAD_LOCAK.get();
+        KEY_THREAD_LOCAK.remove();
         Long deadTime = (Long)redisTemplate.opsForValue().get(key);
         //如果没有说明锁已经释放
         if(deadTime == null){
