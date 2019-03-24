@@ -14,6 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 测试zookeeper分布式锁
@@ -29,6 +31,8 @@ public class TestDistributedLock {
     @Autowired
     private ZkConfig zkConfig;
     private static final byte[] buf = new byte[0];
+
+    private static int sum = 3;
     
     @Test
     public void test() throws Exception{
@@ -68,4 +72,39 @@ public class TestDistributedLock {
         list.sort(String::compareTo);
         System.out.println(list);
     }
+
+    @Test
+    public void testConcurrentGetLock() throws Exception{
+        int count = 50;
+        ExecutorService executorService = Executors.newFixedThreadPool(count);
+        for( int i = 0; i < count; i++) {
+            executorService.execute(() -> {
+                try {
+                    if(DistributedLock.tryLock("lock")){
+                        System.out.println("我拿到了锁");
+                        if(sum == 0){
+                            System.out.println("sum已经是0");
+                            return;
+                        }
+                        System.out.println("还没有停止，sum=" + sum);
+                        sum = sum - 1;
+                        System.out.println(Thread.currentThread().getName() + ": 我要等待6秒，测试其他等人超市是否有效.");
+                        Thread.sleep(6000);
+                        System.out.println("我的等待结束了，其他人可以过来拿锁了.");
+                    }else{
+                        System.out.println("zk等的花都谢了!");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }finally{
+                    DistributedLock.unLock();
+                }
+            });
+        }
+        executorService.shutdown();
+        Thread.sleep(30000);
+        System.out.println("finish, sum=" + sum);
+    }
+    
+    
 }

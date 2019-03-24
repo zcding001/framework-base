@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @since 2019/3/23
  */
 @Component
-@DependsOn({"zkConfig", "ApplicationContextUtils"})
+@DependsOn({"zkConfig", "applicationContextUtils"})
 public class DistributedLock implements InitializingBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(DistributedLock.class);
@@ -86,9 +86,9 @@ public class DistributedLock implements InitializingBean {
         try {
             currNode = zooKeeper.create(path, BUF, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
             //步骤一
-            List<String> nodes = zooKeeper.getChildren(path, false);
+            List<String> nodes = zooKeeper.getChildren(LOCK_ROOT_PATH, false);
             //过滤掉集合中不是当前业务的临时节点
-            nodes = nodes.stream().filter(o -> o.startsWith(path)).collect(Collectors.toList());
+            nodes = nodes.stream().filter(o -> o.startsWith(key)).collect(Collectors.toList());
             nodes.sort(String::compareTo);
             //如果集合为空说明当前创建节点的session在步骤一处已经断开，并且创建的节点已经被zk服务器删除, 此种情况比较极端
             if (nodes.size() == 0) {
@@ -130,7 +130,7 @@ public class DistributedLock implements InitializingBean {
                         Stat stat = zooKeeper.exists(LOCK_ROOT_PATH + "/" + node, new LockWatcher(countDownLatch));
                         if (stat != null) {
                             //等待锁超时
-                            if(!countDownLatch.await(wait, TimeUnit.MILLISECONDS)){
+                            if(!countDownLatch.await(wait + 5000, TimeUnit.MILLISECONDS)){
                                 delPath(zooKeeper);
                                 return false;
                             }
@@ -225,6 +225,7 @@ public class DistributedLock implements InitializingBean {
         THREAD_LOCAL.set(currNode);
         ThreadPoolUtil.callFixedThreadPool(() -> {
             Thread.sleep(expire * 1000);
+            LOG.info("等待了{}秒, 主动结束.", expire);
             delPath(zooKeeper);
             return null;
         });
