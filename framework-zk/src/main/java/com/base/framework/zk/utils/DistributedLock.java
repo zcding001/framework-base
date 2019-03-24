@@ -129,8 +129,9 @@ public class DistributedLock implements InitializingBean {
                     if (currNode.endsWith(nodes.get(i + 1))) {
                         Stat stat = zooKeeper.exists(LOCK_ROOT_PATH + "/" + node, new LockWatcher(countDownLatch));
                         if (stat != null) {
-                            //等待锁超时
-                            if(!countDownLatch.await(wait + 5000, TimeUnit.MILLISECONDS)){
+                            // 等待锁超时，如果是公平锁，等待时间是默认等待时间的2倍，防止因为拿锁的线程处理业务时间太久
+                            // 导致当前线程等待超时
+                            if(!countDownLatch.await(wait * 2, TimeUnit.MILLISECONDS)){
                                 delPath(zooKeeper);
                                 return false;
                             }
