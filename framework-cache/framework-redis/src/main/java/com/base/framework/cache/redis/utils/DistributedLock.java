@@ -93,7 +93,7 @@ public class DistributedLock implements InitializingBean {
     *  @since                   ：2019/3/22
     *  @author                  ：zc.ding@foxmail.com
     */
-    public static boolean unLock() {
+    public static Boolean unLock() {
         long oldCurrTime = threadLocal.get();
         threadLocal.remove();
         String key = KEY_THREAD_LOCAK.get();
@@ -103,11 +103,12 @@ public class DistributedLock implements InitializingBean {
         if(deadTime == null){
             return true;
         }
-        //如果存储的时间大于当前时间，说明此锁不是当前线程创建的锁，当前线程创建的所有已经过期自动自动释放了
-        if(deadTime.equals(oldCurrTime)){
-            return redisTemplate.delete(key) != null;
-        }
-        return false;
+        // 如果存储的时间大于当前时间，说明此锁不是当前线程创建的锁，当前线程创建的所有已经过期自动自动释放了
+        // 此种方式存在并发，例如在删除前key自动过期，那么此时删除将是另外线程创建的新锁
+//        if(deadTime.equals(oldCurrTime)){
+//            return redisTemplate.delete(key) != null;
+//        }
+        return redisTemplate.opsForValue().setIfPresent(key, oldCurrTime, 1, TimeUnit.MICROSECONDS);
     }
     
     @Override
