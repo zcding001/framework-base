@@ -1,12 +1,12 @@
 package com.base.framework.cache.redis.utils;
 
 import com.base.framework.cache.redis.exceptions.RedisFrameworkExpception;
-import com.base.framework.core.commons.Constants;
-import com.base.framework.core.utils.ApplicationContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit;
  * @since 2019/3/21
  */
 @Component
-@DependsOn("applicationContextUtils")
-public class DistributedLock implements InitializingBean {
+//@DependsOn("applicationContextUtils")
+public class DistributedLock implements InitializingBean, ApplicationContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(DistributedLock.class);
     
@@ -28,15 +28,16 @@ public class DistributedLock implements InitializingBean {
     /**用于存储锁的内容**/
     private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
     private static ThreadLocal<String> KEY_THREAD_LOCAK = new ThreadLocal<>();
+    private ApplicationContext applicationContext;
     
-//    /** 默认等待时间5秒 **/
-//    private final static long DEFAULT_WAIT_TIME = 5;
-//    /** 默认过期时间5秒 **/
-//    private final static long DEFAULT_EXPIRE_TIME = 5;
-//    /** 最小默认时间1秒 **/
-//    private final static long MIN_DEFAULT_TIME = 1;
-//    /** 最大默认时间30秒 **/
-//    private final static long MAX_DEFAULT_TIME = 30;
+    /** 默认等待时间5秒 **/
+    private final static long DEFAULT_WAIT_TIME = 5;
+    /** 默认过期时间5秒 **/
+    private final static long DEFAULT_EXPIRE_TIME = 5;
+    /** 最小默认时间1秒 **/
+    private final static long MIN_DEFAULT_TIME = 1;
+    /** 最大默认时间30秒 **/
+    private final static long MAX_DEFAULT_TIME = 30;
 
     /**
     *  获得分布式锁
@@ -46,7 +47,7 @@ public class DistributedLock implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static boolean tryLock(String key) {
-        return tryLock(key, Constants.LOCK_EXPIRES, Constants.LOCK_WAITTIME);    
+        return tryLock(key, DEFAULT_EXPIRE_TIME, DEFAULT_WAIT_TIME);    
     }
     
     /**
@@ -59,8 +60,8 @@ public class DistributedLock implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static boolean tryLock(String key, long expire, long wait) {
-        if (expire < Constants.LOCK_MIN_TIME || expire > Constants.LOCK_MAX_TIME || wait < Constants.LOCK_MIN_TIME || 
-                wait > Constants.LOCK_MAX_TIME) {
+        if (expire < MIN_DEFAULT_TIME || expire > MAX_DEFAULT_TIME || wait < MIN_DEFAULT_TIME || 
+                wait > MAX_DEFAULT_TIME) {
             throw new RedisFrameworkExpception("过期时间, 有效时间必须在[1, 30]之间");
         }
         KEY_THREAD_LOCAK.set(key);
@@ -108,11 +109,17 @@ public class DistributedLock implements InitializingBean {
 //        if(deadTime.equals(oldCurrTime)){
 //            return redisTemplate.delete(key) != null;
 //        }
-        return redisTemplate.opsForValue().setIfPresent(key, oldCurrTime, 1, TimeUnit.MICROSECONDS);
+        return redisTemplate.opsForValue().setIfPresent(key, oldCurrTime, 1, TimeUnit.MILLISECONDS);
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
-        redisTemplate = ApplicationContextUtils.getBean("redisTemplate");
+        redisTemplate = (RedisTemplate<String, Object>)applicationContext.getBean("redisTemplate");
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

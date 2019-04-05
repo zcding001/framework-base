@@ -1,22 +1,21 @@
 package com.base.framework.zk.utils;
 
-import com.base.framework.core.commons.Constants;
-import com.base.framework.core.utils.ApplicationContextUtils;
-import com.base.framework.core.utils.ThreadPoolUtil;
 import com.base.framework.zk.config.ZkConfig;
 import com.base.framework.zk.exceptions.ZkFrameworkExpception;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,12 +24,13 @@ import java.util.stream.Collectors;
  * @since 2019/3/23
  */
 @Component
-@DependsOn({"zkConfig", "applicationContextUtils"})
-public class DistributedLock implements InitializingBean {
+@DependsOn({"zkConfig"})
+public class DistributedLock implements InitializingBean, ApplicationContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(DistributedLock.class);
     private static final ThreadLocal<String> THREAD_LOCAL = new ThreadLocal<>();
     private static final ThreadLocal<ZooKeeper> ZK_THREAD_LOCAL = new ThreadLocal<>();
+    private static final ExecutorService FIXED_THREAD_POOL = new ThreadPoolExecutor(50, 200, 0L,TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     /** 锁的根路径 **/
     private static final String LOCK_ROOT_PATH = "/locks";
     /** 锁后缀 **/
@@ -41,6 +41,16 @@ public class DistributedLock implements InitializingBean {
     private static final int LOCK_FAIR = 1;
     private final static byte[] BUF = new byte[0];
     private static ZkConfig zkConfig;
+    private ApplicationContext applicationContext;
+
+    /** 默认等待时间5秒 **/
+    private final static long DEFAULT_WAIT_TIME = 5;
+    /** 默认过期时间5秒 **/
+    private final static long DEFAULT_EXPIRE_TIME = 5;
+    /** 最小默认时间1秒 **/
+    private final static long MIN_DEFAULT_TIME = 1;
+    /** 最大默认时间30秒 **/
+    private final static long MAX_DEFAULT_TIME = 30;
 
     /**
     *  获得所有
@@ -50,7 +60,7 @@ public class DistributedLock implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static boolean tryLock(String key) {
-        return tryLock(key, Constants.LOCK_EXPIRES, Constants.LOCK_WAITTIME);    
+        return tryLock(key, DEFAULT_EXPIRE_TIME, DEFAULT_WAIT_TIME);    
     }
     
     /**
@@ -63,6 +73,10 @@ public class DistributedLock implements InitializingBean {
     *  @author                  ：zc.ding@foxmail.com
     */
     public static boolean tryLock(String key, long expire, long wait) {
+        if (expire < MIN_DEFAULT_TIME || expire > MAX_DEFAULT_TIME || wait < MIN_DEFAULT_TIME ||
+                wait > MAX_DEFAULT_TIME) {
+            throw new ZkFrameworkExpception("过期时间, 有效时间必须在[1, 30]之间");
+        }
         ZooKeeper zooKeeper = getZooKeeper();
         ZK_THREAD_LOCAL.set(zooKeeper);
         return tryLock(zooKeeper, key, expire, wait);
@@ -224,7 +238,7 @@ public class DistributedLock implements InitializingBean {
     */
     private static void runExpireThread(final ZooKeeper zooKeeper, String currNode, long expire){
         THREAD_LOCAL.set(currNode);
-        ThreadPoolUtil.callFixedThreadPool(() -> {
+        FIXED_THREAD_POOL.submit(() -> {
             Thread.sleep(expire * 1000);
             LOG.info("等待了{}秒, 主动结束.", expire);
             delPath(zooKeeper);
@@ -265,8 +279,13 @@ public class DistributedLock implements InitializingBean {
     
     @Override
     public void afterPropertiesSet() {
-        zkConfig = ApplicationContextUtils.getBean(ZkConfig.class);
+        zkConfig = applicationContext.getBean(ZkConfig.class);
         createLockRootPath();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
     /**
@@ -278,7 +297,7 @@ public class DistributedLock implements InitializingBean {
     static class LockWatcher implements Watcher {
         private CountDownLatch latch;
 
-        public LockWatcher(CountDownLatch latch) {
+        private LockWatcher(CountDownLatch latch) {
             this.latch = latch;
         }
 
