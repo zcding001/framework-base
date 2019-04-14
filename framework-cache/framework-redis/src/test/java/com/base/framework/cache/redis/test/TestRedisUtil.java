@@ -143,5 +143,11 @@ public class TestRedisUtil {
         assertThat(RedisUtil.lSize(key), equalTo(3L));
     }
     
+    @Test
+    public void testPattern() {
+        List<String> keys = RedisUtil.keys("");
+        System.out.println(keys);
+    }
+    
 }
 

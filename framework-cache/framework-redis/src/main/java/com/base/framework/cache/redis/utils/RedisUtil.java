@@ -9,10 +9,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -532,5 +529,16 @@ public class RedisUtil implements InitializingBean, ApplicationContextAware {
     @SuppressWarnings("unchecked")
     public static <T> T lGet(String key, long index) {
         return (T)exeCommandForObject(() -> listOperations.index(key, index));
+    }
+
+    /**
+    *  查询所有的key
+    *  @param key 关键字
+    *  @return java.util.List<java.lang.String>
+    *  @author                  ：zc.ding@foxmail.com
+    */
+    public static List<String> keys(String key) {
+        Set<String> set = redisTemplate.keys(key + "*");
+        return set == null ? Collections.emptyList() : new ArrayList<>(set);
     }
 }
