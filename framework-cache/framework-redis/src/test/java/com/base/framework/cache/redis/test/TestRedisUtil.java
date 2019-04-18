@@ -6,7 +6,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.types.RedisClientInfo;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -28,6 +31,9 @@ import static org.hamcrest.CoreMatchers.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestRedisUtil {
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+    
     @Test
     public void testNotNull(){
         assertNotNull(RedisUtil.getHashOperations());    
@@ -141,6 +147,12 @@ public class TestRedisUtil {
         assertThat(RedisUtil.lGet(key, 1, 2), hasItem("liSi"));
         assertThat(RedisUtil.lGet(key, 1), equalTo("liSi"));
         assertThat(RedisUtil.lSize(key), equalTo(3L));
+    }
+    
+    @Test
+    public void testState() {
+        List<RedisClientInfo> list = redisTemplate.getClientList();
+        System.out.println(list);
     }
     
 }

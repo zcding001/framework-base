@@ -16,9 +16,13 @@ import org.springframework.stereotype.Component;
 @Data
 public class ZkConfig {
 
+    /** zk地址 **/
     private String address;
+    /** session超时时间 **/
     private int sessionTimeout;
+    /** 等待连接时间 **/
     private long waitConnTimeout;
+    /** 锁模式 0：非公平锁 1：公平锁 **/
     private int fairLock;
     
     
