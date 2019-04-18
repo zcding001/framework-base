@@ -740,7 +740,7 @@ public interface DateUtils {
     }
     
     /**
-    *  计算周期是时间  {@link com.dobe.appserver.utils.DateUtils.PeriodEnum}
+    *  计算周期是时间 
     *  @param periodEnum        : 周期类型
     *  @return java.util.Map<java.lang.String,java.util.Date>
     *  @date                    ：2018/10/2

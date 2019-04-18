@@ -1,16 +1,15 @@
 package com.base.framework.cache.redis.utils;
 
 import com.base.framework.cache.redis.exceptions.RedisFrameworkExpception;
-import com.base.framework.core.utils.ApplicationContextUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+//import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -22,14 +21,15 @@ import java.util.function.Supplier;
  * @since  2018/11/15
  */
 @Component
-@DependsOn({"applicationContextUtils"})
-public class RedisUtil implements InitializingBean {
+//@DependsOn({"applicationContextUtils"})
+public class RedisUtil implements InitializingBean, ApplicationContextAware {
     
     private static RedisTemplate<String, Object> redisTemplate;
     private static HashOperations<String, String, Object> hashOperations;
     private static ListOperations<String, Object> listOperations;
     private static SetOperations<String, Object> setOperations;
     private static ZSetOperations<String, Object> zSetOperations;
+    private ApplicationContext applicationContext;
     
     private RedisUtil(){}
 
@@ -119,12 +119,18 @@ public class RedisUtil implements InitializingBean {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
-        redisTemplate = ApplicationContextUtils.getBean("redisTemplate");
+        redisTemplate = (RedisTemplate<String, Object>)applicationContext.getBean("redisTemplate");
         hashOperations = redisTemplate.opsForHash();
         listOperations = redisTemplate.opsForList();
         setOperations = redisTemplate.opsForSet();
         zSetOperations = redisTemplate.opsForZSet();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
     /**
@@ -524,5 +530,15 @@ public class RedisUtil implements InitializingBean {
     public static <T> T lGet(String key, long index) {
         return (T)exeCommandForObject(() -> listOperations.index(key, index));
     }
-    
+
+    /**
+    *  查询所有的key
+    *  @param key 关键字
+    *  @return java.util.List<java.lang.String>
+    *  @author                  ：zc.ding@foxmail.com
+    */
+    public static List<String> keys(String key) {
+        Set<String> set = redisTemplate.keys(key + "*");
+        return set == null ? Collections.emptyList() : new ArrayList<>(set);
+    }
 }
