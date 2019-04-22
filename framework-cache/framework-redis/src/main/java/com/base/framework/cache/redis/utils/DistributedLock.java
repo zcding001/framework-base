@@ -8,8 +8,10 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,7 +21,6 @@ import java.util.concurrent.TimeUnit;
  * @since 2019/3/21
  */
 @Component
-//@DependsOn("applicationContextUtils")
 public class DistributedLock implements InitializingBean, ApplicationContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(DistributedLock.class);
@@ -39,8 +40,20 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
     /** 最大默认时间30秒 **/
     private final static long MAX_DEFAULT_TIME = 30;
 
+    private final static String LUA_LOCK = "if redis.call('setNx',KEYS[1],ARGV[1]) then if redis.call('get',KEYS[1])==ARGV[1] then return redis.call('expire',KEYS[1],ARGV[2]) else return 0 end else return 0 end";
+    private final static String LUA_UNLOCK = "if redis.call('get',KEYS[1]) == ARGV[1] then return redis.call('del',KEYS[1]) else return 0 end";
+    private static DefaultRedisScript<Boolean> LUA_LOCK_SCRIPT;
+    private static DefaultRedisScript<Boolean> LUA_UNLOCK_SCRIPT;
+    static{
+        LUA_LOCK_SCRIPT = new DefaultRedisScript<>();
+        LUA_LOCK_SCRIPT.setScriptText(LUA_LOCK);
+        LUA_LOCK_SCRIPT.setResultType(Boolean.class);
+        LUA_UNLOCK_SCRIPT = new DefaultRedisScript<>();
+        LUA_UNLOCK_SCRIPT.setScriptText(LUA_UNLOCK);
+        LUA_UNLOCK_SCRIPT.setResultType(Boolean.class);
+    }
     /**
-    *  获得分布式锁
+    *  获得分布式锁, 推荐使用{@link DistributedLock#tryLockLua(String)}}
     *  @param key   键
     *  @return boolean
     *  @since                   ：2019/3/22
@@ -51,7 +64,7 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
     }
     
     /**
-    *  获得分布式锁
+    *  获得分布式锁，推荐使用{@link DistributedLock#tryLockLua(String, long, long)}}
     *  @param key   键
     *  @param expire    过期时间
     *  @param wait  等待时间
@@ -60,11 +73,7 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
     *  @author                  ：zc.ding@foxmail.com
     */
     public static boolean tryLock(String key, long expire, long wait) {
-        if (expire < MIN_DEFAULT_TIME || expire > MAX_DEFAULT_TIME || wait < MIN_DEFAULT_TIME || 
-                wait > MAX_DEFAULT_TIME) {
-            throw new RedisFrameworkExpception("过期时间, 有效时间必须在[1, 30]之间");
-        }
-        KEY_THREAD_LOCAK.set(key);
+        validParam(key, expire, wait);
         try {
             wait = wait * 1000;
             expire = expire * 1000;
@@ -89,7 +98,7 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
     }
 
     /**
-    *  释放锁
+    *  释放锁, 推荐使用{@link DistributedLock#unLockLua()}
     *  @return boolean
     *  @since                   ：2019/3/22
     *  @author                  ：zc.ding@foxmail.com
@@ -104,13 +113,82 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
         if(deadTime == null){
             return true;
         }
-        // 如果存储的时间大于当前时间，说明此锁不是当前线程创建的锁，当前线程创建的所有已经过期自动自动释放了
-        // 此种方式存在并发，例如在删除前key自动过期，那么此时删除将是另外线程创建的新锁
-//        if(deadTime.equals(oldCurrTime)){
-//            return redisTemplate.delete(key) != null;
-//        }
         return redisTemplate.opsForValue().setIfPresent(key, oldCurrTime, 1, TimeUnit.MILLISECONDS);
     }
+
+    /**
+     *  获得分布式锁
+     *  @param key   键
+     *  @return boolean
+     *  @since                   ：2019/3/22
+     *  @author                  ：zc.ding@foxmail.com
+     */
+    public static boolean tryLockLua(String key) {
+        return tryLockLua(key, DEFAULT_EXPIRE_TIME, DEFAULT_WAIT_TIME);
+    }
+
+    /**
+     *  获得分布式锁，保证操作原子性，防止在setnx和expire之间异常导致死锁
+     *  @param key   键
+     *  @param expire    过期时间
+     *  @param wait  等待时间
+     *  @return boolean  true：拿到锁 false:未拿到锁
+     *  @since                   ：2019/3/22
+     *  @author                  ：zc.ding@foxmail.com
+     */
+    public static boolean tryLockLua(String key, long expire, long wait) {
+        validParam(key, expire, wait);
+        try {
+            wait = wait * 1000;
+            long currTime = System.currentTimeMillis();
+            threadLocal.set(currTime);
+            Boolean lock = redisTemplate.execute(LUA_LOCK_SCRIPT, Collections.singletonList(key), currTime, expire);
+            if(lock != null && lock){
+                return true;
+            }
+            while (lock != null && !lock && (System.currentTimeMillis() - currTime) <= wait) {
+                lock = redisTemplate.execute(LUA_LOCK_SCRIPT, Collections.singletonList(key), currTime, expire);
+                if(lock != null && lock){
+                    return true;
+                }
+                Thread.sleep(10);
+            }
+        } catch (Exception e) {
+            LOG.error("获取分布式锁异常.", e);
+        }
+        return false;
+    }
+
+
+    /**
+     *  释放锁
+     *  @return boolean
+     *  @author                  ：zc.ding@foxmail.com
+     */
+    public static Boolean unLockLua() {
+        long oldCurrTime = threadLocal.get();
+        threadLocal.remove();
+        String key = KEY_THREAD_LOCAK.get();
+        KEY_THREAD_LOCAK.remove();
+        return redisTemplate.execute(LUA_UNLOCK_SCRIPT, Collections.singletonList(key), oldCurrTime);
+    }
+
+    /**
+     *  验证锁时间和过期时间
+     *  @param key   键
+     *  @param expire    过期时间
+     *  @param wait  等待时间
+     *  @since                   ：2019/3/22
+     *  @author                  ：zc.ding@foxmail.com
+     */
+    private static void validParam(String key, long expire, long wait) {
+        if (expire < MIN_DEFAULT_TIME || expire > MAX_DEFAULT_TIME || wait < MIN_DEFAULT_TIME ||
+                wait > MAX_DEFAULT_TIME) {
+            throw new RedisFrameworkExpception("过期时间, 有效时间必须在[1, 30]之间");
+        }
+        KEY_THREAD_LOCAK.set(key);
+    }
+    
     
     @Override
     @SuppressWarnings("unchecked")
