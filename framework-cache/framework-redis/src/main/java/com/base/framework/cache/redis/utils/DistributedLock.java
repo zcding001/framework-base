@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * redis分布式锁
@@ -27,8 +28,8 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
     
     private static RedisTemplate<String, Object> redisTemplate;
     /**用于存储锁的内容**/
-    private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
-    private static ThreadLocal<String> KEY_THREAD_LOCAK = new ThreadLocal<>();
+    private static ThreadLocal<Long> VALUE_THREAD_LOCAL = new ThreadLocal<>();
+    private static ThreadLocal<String> KEY_THREAD_LOCAL = new ThreadLocal<>();
     private ApplicationContext applicationContext;
     
     /** 默认等待时间5秒 **/
@@ -52,6 +53,7 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
         LUA_UNLOCK_SCRIPT.setScriptText(LUA_UNLOCK);
         LUA_UNLOCK_SCRIPT.setResultType(Boolean.class);
     }
+    
     /**
     *  获得分布式锁, 推荐使用{@link DistributedLock#tryLockLua(String)}}
     *  @param key   键
@@ -77,8 +79,8 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
         try {
             wait = wait * 1000;
             expire = expire * 1000;
-            long currTime = System.currentTimeMillis();
-            threadLocal.set(currTime);
+            long currTime = Thread.currentThread().getId();
+            VALUE_THREAD_LOCAL.set(currTime);
             //轮询时间为expire的2/3与DEFAULT_POLL_TIME中最大的那个值
             Boolean lock = redisTemplate.opsForValue().setIfAbsent(key, currTime, expire, TimeUnit.MILLISECONDS);
             if(lock != null && lock){
@@ -104,10 +106,10 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
     *  @author                  ：zc.ding@foxmail.com
     */
     public static Boolean unLock() {
-        long oldCurrTime = threadLocal.get();
-        threadLocal.remove();
-        String key = KEY_THREAD_LOCAK.get();
-        KEY_THREAD_LOCAK.remove();
+        long oldCurrTime = VALUE_THREAD_LOCAL.get();
+        VALUE_THREAD_LOCAL.remove();
+        String key = KEY_THREAD_LOCAL.get();
+        KEY_THREAD_LOCAL.remove();
         Long deadTime = (Long)redisTemplate.opsForValue().get(key);
         //如果没有说明锁已经释放
         if(deadTime == null){
@@ -140,8 +142,8 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
         validParam(key, expire, wait);
         try {
             wait = wait * 1000;
-            long currTime = System.currentTimeMillis();
-            threadLocal.set(currTime);
+            long currTime = Thread.currentThread().getId();
+            VALUE_THREAD_LOCAL.set(currTime);
             Boolean lock = redisTemplate.execute(LUA_LOCK_SCRIPT, Collections.singletonList(key), currTime, expire);
             if(lock != null && lock){
                 return true;
@@ -166,10 +168,10 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
      *  @author                  ：zc.ding@foxmail.com
      */
     public static Boolean unLockLua() {
-        long oldCurrTime = threadLocal.get();
-        threadLocal.remove();
-        String key = KEY_THREAD_LOCAK.get();
-        KEY_THREAD_LOCAK.remove();
+        long oldCurrTime = VALUE_THREAD_LOCAL.get();
+        VALUE_THREAD_LOCAL.remove();
+        String key = KEY_THREAD_LOCAL.get();
+        KEY_THREAD_LOCAL.remove();
         return redisTemplate.execute(LUA_UNLOCK_SCRIPT, Collections.singletonList(key), oldCurrTime);
     }
 
@@ -186,7 +188,7 @@ public class DistributedLock implements InitializingBean, ApplicationContextAwar
                 wait > MAX_DEFAULT_TIME) {
             throw new RedisFrameworkExpception("过期时间, 有效时间必须在[1, 30]之间");
         }
-        KEY_THREAD_LOCAK.set(key);
+        KEY_THREAD_LOCAL.set(key);
     }
     
     
